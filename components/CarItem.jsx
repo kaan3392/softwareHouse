@@ -23,19 +23,32 @@ export const Item = ({ item }) => {
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Clinder Volume</Text>
-        <Text style={styles.name}>{item.cylinderVolume}</Text>
+        <Text style={styles.name}>
+          {item.cylinderVolume} <Text style={styles.small}>cm3</Text>
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Maximum Horsepower</Text>
-        <Text style={styles.name}>{item.maximumHorsepower}</Text>
+        <Text style={styles.name}>
+          {item.maximumHorsepower} <Text style={styles.small}>PS</Text>{" "}
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Weight</Text>
-        <Text style={styles.name}>{item.weight}</Text>
+        <Text style={styles.name}>
+          {item.weight} <Text style={styles.small}>kg</Text>
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Fuel Consumption Average</Text>
-        <Text style={styles.name}>{item.fuelConsumptionAverage}</Text>
+        {item.fuelConsumptionAverage === "none" ? (
+          <Text style={styles.name}>-</Text>
+        ) : (
+          <Text style={styles.name}>
+            {item.fuelConsumptionAverage}{" "}
+            <Text style={styles.small}>L/100km</Text>
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -45,7 +58,7 @@ const styles = StyleSheet.create({
   item: {
     padding: 10,
     marginVertical: 8,
-    marginHorizontal: 30,
+    marginHorizontal: 20,
     alignItems: "center",
     elevation: 5,
     borderRadius: 5,
@@ -61,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
     color: "black",
   },
   title: {
@@ -70,8 +83,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 190,
-    height: 190,
+    width: 200,
+    height: 200,
     resizeMode: "contain",
   },
 
@@ -82,5 +95,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: 60,
+  },
+  small: {
+    fontSize: 12,
   },
 });

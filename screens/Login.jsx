@@ -3,35 +3,69 @@ import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import * as Facebook from "expo-auth-session/providers/facebook";
+import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
+  const [accessToken, setAccessToken] = useState(null);
   const [user, setUser] = useState(null);
-  const [request, response, promptAsync] = Facebook.useAuthRequest({
-    clientId: "782322713529233",
-  });
+  const [requestFacebook, responseFacebook, promptAsyncFacebook] =
+    Facebook.useAuthRequest({
+      clientId: "782322713529233",
+    });
+  const [requestGoogle, responseGoogle, promptAsyncGoogle] =
+    Google.useIdTokenAuthRequest({
+      clientId:
+        "433638408319-j8jsusao7b1l7uni4ep6bc8ig79rnv7r.apps.googleusercontent.com",
+      iosClientId:
+        "433638408319-tkc8dujpk0qhukkfe9r3u1ggrg8steoo.apps.googleusercontent.com",
+      androidClientId:
+        "433638408319-rjvp9mbs9d2harooemakndipr0t8d2nr.apps.googleusercontent.com",
+    });
 
   useEffect(() => {
-    if (response && response.type === "success" && response.authentication) {
+    if (
+      responseFacebook &&
+      responseFacebook.type === "success" &&
+      responseFacebook.authentication
+    ) {
       (async () => {
         const userInfoResponse = await fetch(
-          `https://graph.facebook.com/me?access_token=${response.authentication.accessToken}&fields=id,name,picture.type(large)`
+          `https://graph.facebook.com/me?access_token=${responseFacebook.authentication.accessToken}&fields=id,name,picture.type(large)`
         );
         const userInfo = await userInfoResponse.json();
         setUser(userInfo);
-        console.log(response);
       })();
     }
-  }, [response]);
+  }, [responseFacebook]);
+
+  useEffect(() => {
+    if (
+      responseGoogle &&
+      responseGoogle.type === "success" &&
+      responseGoogle.authentication
+    ) {
+      setAccessToken(responseGoogle.authentication.accessToken);
+      accessToken && fetchUserInfo();
+    }
+  }, [responseGoogle, accessToken]);
+
+  async function fetchUserInfo() {
+    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const userInfo = await response.json();
+    setUser(userInfo);
+  }
 
   console.log(user);
 
   const onPressFacebook = async () => {
     try {
-      const result = await promptAsync();
-      console.log("response",response);
+      const result = await promptAsyncFacebook();
+      console.log("response", result);
       if (result.type !== "success") {
         alert("Login failed, please try again");
         return;
@@ -41,8 +75,17 @@ export default function Login() {
     }
   };
 
-  const onPressGoogle = () => {
-    alert("Login with Google");
+  const onPressGoogle = async () => {
+    try {
+      const result = await promptAsyncGoogle();
+      if (result.type !== "success") {
+        alert("Login failed, please try again");
+        return;
+      }
+      console.log("responseGoogle*****", result);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -91,14 +134,12 @@ export default function Login() {
   );
 }
 
-function Profile() {
+function Profile({ user }) {
+  console.log(user);
   return (
     <View style={styles.profile}>
       <Text style={styles.titleProfile}>Welcome {user.name}!</Text>
-      <Image
-        source={{ uri: user.picture.data.url }}
-        style={styles.imageProfile}
-      />
+      <Image source={{ uri: user.picture }} style={styles.imageProfile} />
       <Text style={styles.titleProfile}>Your email is {user.email}!</Text>
     </View>
   );
