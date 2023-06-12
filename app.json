@@ -21,10 +21,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.knlcl.deneme"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "scheme":["deneme","fb782322713529233"]
   }
 }
+
