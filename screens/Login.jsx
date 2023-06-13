@@ -5,16 +5,22 @@ import { StatusBar } from "expo-status-bar";
 import * as Facebook from "expo-auth-session/providers/facebook";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
+import { useStore } from "../store";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
+  const setUser = useStore((state) => state.setUser);
+  const user = useStore((state) => state.user);
+
   const [accessToken, setAccessToken] = useState(null);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+
   const [requestFacebook, responseFacebook, promptAsyncFacebook] =
     Facebook.useAuthRequest({
       clientId: "782322713529233",
     });
+
   const [requestGoogle, responseGoogle, promptAsyncGoogle] =
     Google.useIdTokenAuthRequest({
       clientId:
@@ -60,12 +66,10 @@ export default function Login() {
     setUser(userInfo);
   }
 
-  console.log(user);
 
   const onPressFacebook = async () => {
     try {
       const result = await promptAsyncFacebook();
-      console.log("response", result);
       if (result.type !== "success") {
         alert("Login failed, please try again");
         return;
@@ -82,7 +86,6 @@ export default function Login() {
         alert("Login failed, please try again");
         return;
       }
-      console.log("responseGoogle*****", result);
     } catch (e) {
       console.log(e);
     }
@@ -90,57 +93,34 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      {user ? (
-        <Profile user={user} />
-      ) : (
-        <>
-          <StatusBar style="auto" />
-          <Text style={styles.title}> Cars App</Text>
-          <LinearGradient
-            style={styles.gradient}
-            locations={[0.5, 0.9]}
-            colors={["lightgray", "darkgray"]}
-          >
-            <Image
-              style={styles.image}
-              source={require("../assets/mustang-no-bg.png")}
-            />
-          </LinearGradient>
-          <Pressable
-            android_ripple={{ color: "gray" }}
-            style={styles.button}
-            onPress={onPressGoogle}
-          >
-            <Text style={styles.text}>Login With Google</Text>
-            <Image
-              style={styles.icon}
-              source={require("../assets/google.png")}
-            />
-          </Pressable>
-          <Pressable
-            android_ripple={{ color: "gray" }}
-            style={styles.button}
-            onPress={onPressFacebook}
-          >
-            <Text style={styles.text}>Login With Facebook</Text>
-            <Image
-              style={styles.icon}
-              source={require("../assets/facebook.png")}
-            />
-          </Pressable>
-        </>
-      )}
-    </View>
-  );
-}
-
-function Profile({ user }) {
-  console.log(user);
-  return (
-    <View style={styles.profile}>
-      <Text style={styles.titleProfile}>Welcome {user.name}!</Text>
-      <Image source={{ uri: user.picture }} style={styles.imageProfile} />
-      <Text style={styles.titleProfile}>Your email is {user.email}!</Text>
+      <StatusBar style="auto" />
+      <Text style={styles.title}> Cars App</Text>
+      <LinearGradient
+        style={styles.gradient}
+        locations={[0.5, 0.9]}
+        colors={["lightgray", "darkgray"]}
+      >
+        <Image
+          style={styles.image}
+          source={require("../assets/mustang-no-bg.png")}
+        />
+      </LinearGradient>
+      <Pressable
+        android_ripple={{ color: "gray" }}
+        style={styles.button}
+        onPress={onPressGoogle}
+      >
+        <Text style={styles.text}>Login With Google</Text>
+        <Image style={styles.icon} source={require("../assets/google.png")} />
+      </Pressable>
+      <Pressable
+        android_ripple={{ color: "gray" }}
+        style={styles.button}
+        onPress={onPressFacebook}
+      >
+        <Text style={styles.text}>Login With Facebook</Text>
+        <Image style={styles.icon} source={require("../assets/facebook.png")} />
+      </Pressable>
     </View>
   );
 }

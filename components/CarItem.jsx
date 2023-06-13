@@ -1,21 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import axios from "axios";
+import { useStore } from "../store";
 
-export const Item = ({ item }) => {
-
-  
-  const deleteCar = async (id) => {
-    console.log(id);
-    try {
-      const response = await axios.delete(
-        `http://10.0.2.2:5000/api/${id}/delete`
-      );
-      console.log(response.data.data.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+export const CarItem = ({ item }) => {
+  const deleteCar = useStore((state) => state.deleteCar);
 
   return (
     <View style={styles.item}>
@@ -71,8 +59,8 @@ export const Item = ({ item }) => {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 10,
-    marginVertical: 8,
+    padding: 5,
+    marginVertical: 10,
     marginHorizontal: 20,
     alignItems: "center",
     elevation: 5,
