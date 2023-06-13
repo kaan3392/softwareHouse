@@ -13,13 +13,14 @@ export const useStore = create((set) => ({
   carDeleteError: null,
   carAddLoading: false,
   carAddError: null,
+  isCarModalVisible: false,
   // compareTwoCar:[],
 
   getAllCars: async () => {
     set((prev) => ({ ...prev, carsLoading: true }));
     try {
       const { data } = await axios.get(`http://10.0.2.2:5000/api/`);
-      set((prev) => ({ ...prev, carsLoading: false, cars: data }));
+      set((prev) => ({ ...prev, carsLoading: false, cars: data.data }));
     } catch (error) {
       set((prev) => ({ ...prev, carsLoading: false, carsError: true }));
     }
@@ -32,7 +33,7 @@ export const useStore = create((set) => ({
       set((prev) => ({
         ...prev,
         carAddLoading: false,
-        cars: [...prev.cars, data],
+        cars: [...prev.cars, data.data],
       }));
     } catch (error) {
       set((prev) => ({ ...prev, carAddLoading: false, carAddError: true }));
@@ -42,7 +43,6 @@ export const useStore = create((set) => ({
     set((prev) => ({ ...prev, carDeleteLoading: true }));
     try {
       await axios.delete(`http://10.0.2.2:5000/api/${carId}/delete`);
-      console.log("delete button")
       set((prev) => ({
         ...prev,
         carDeleteLoading: false,
@@ -66,7 +66,7 @@ export const useStore = create((set) => ({
       set((prev) => ({
         ...prev,
         carUpdateLoading: false,
-        cars: prev.cars.map((car) => (car._id === id ? data : car)),
+        cars: prev.cars.map((car) => (car._id === id ? data.data : car)),
       }));
     } catch (error) {
       set((prev) => ({
@@ -102,7 +102,17 @@ export const useStore = create((set) => ({
       console.log(error);
     }
   },
-  // compareTwoCars: (car1, car2) => {
-  //   set((prev) => ({ ...prev, compareTwoCar: [car1, car2] }));
-  // }
+  carModalVisible: () => {
+    console.log("add carrr");
+    set((prev) => ({
+      ...prev,
+      isCarModalVisible: true,
+    }));
+  },
+  notCarModalVisible: () => {
+    set((prev) => ({
+      ...prev,
+      isCarModalVisible: false,
+    }));
+  },
 }));

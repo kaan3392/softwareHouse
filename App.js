@@ -1,37 +1,78 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  BottomTabBar,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomePage from "./screens/HomePage";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Comparasion from "./screens/Comparasion";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, View, Pressable, StyleSheet } from "react-native";
+import { Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "./store";
+import { AddCar } from "./screens/AddCar";
+import { UpdateCar } from "./screens/UpdateCar";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function StackNavigator() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: "gray",
+        },
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "black",
+        tabBarStyle: {
+          backgroundColor: "gray",
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 16,
+          fontWeight: "bold",
+        },
+        tabBarIconStyle: {
+          size: 30,
+        },
+      }}
+    >
+      <Stack.Screen
+        options={({ navigation }) => ({
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+          headerRight: () => (
+            <Pressable
+              style={styles.button}
+              onPress={() => navigation.navigate("Add Car")}
+            >
+              <Text style={{ color: "white" }}>Add Car</Text>
+              <Ionicons name="car-sport" size={24} color="white" />
+            </Pressable>
+          ),
+        })}
+        name="HomePage"
+        component={HomePage}
+      />
+      <Stack.Screen name="Add Car" component={AddCar} />
+      <Stack.Screen name="Update Car" component={UpdateCar} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
   const getUser = useStore((state) => state.getUser);
   const user = useStore((state) => state.user);
   const logout = useStore((state) => state.logout);
+  const carModalVisible = useStore((state) => state.carModalVisible);
 
   useEffect(() => {
     getUser();
   }, []);
-
-  // const user = {
-  //   email: "kacak3392@gmail.com",
-  //   picture:
-  //     "https://lh3.googleusercontent.com/a/AAcHTteZHsv7JAoJNZ0ANBCAA7No2914gsglgspvttM7UA=s96-c",
-  //   given_name: "Kaan",
-  //   family_name: "Alacali",
-  // };
 
   if (!user) {
     return <Login />;
@@ -40,18 +81,48 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
-          headerTintColor: "black",
+          headerTintColor: "white",
           headerStyle: {
             backgroundColor: "gray",
           },
-          tabBarActiveTintColor: "black",
-          tabBarInactiveTintColor: "lightgray",
+          tabBarActiveTintColor: "white",
+          tabBarInactiveTintColor: "black",
           tabBarStyle: {
             backgroundColor: "gray",
+            height: 60,
+          },
+          tabBarLabelStyle: {
+            fontSize: 16,
+            fontWeight: "bold",
+          },
+          tabBarIconStyle: {
+            size: 30,
           },
         }}
       >
         <Tab.Screen
+          name="Home"
+          component={StackNavigator}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Home",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" color={color} size={size} />
+            ),
+            headerRight: () => (
+              <Pressable
+                style={styles.button}
+                onPress={() => {
+                  carModalVisible();
+                }}
+              >
+                <Text style={{ color: "white" }}>Add Car</Text>
+                <Ionicons name="car-sport" size={24} color="white" />
+              </Pressable>
+            ),
+          }}
+        />
+        {/* <Tab.Screen
           name="Home"
           component={HomePage}
           options={{
@@ -63,15 +134,15 @@ export default function App() {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  console.log("pressed add car");
+                  carModalVisible();
                 }}
               >
-                <Text>Add Car</Text>
-                <Ionicons name="car-sport" size={24} color="black" />
+                <Text style={{ color: "white" }}>Add Car</Text>
+                <Ionicons name="car-sport" size={24} color="white" />
               </Pressable>
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Compare"
           component={Comparasion}
@@ -98,8 +169,8 @@ export default function App() {
                   logout();
                 }}
               >
-                <Text>Logout</Text>
-                <MaterialCommunityIcons name="logout" size={24} color="black" />
+                <Text style={{ color: "white" }}>Logout</Text>
+                <MaterialCommunityIcons name="logout" size={24} color="white" />
               </Pressable>
             ),
             tabBarIcon: ({ color, size }) => (
@@ -122,7 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    borderColor: "black",
+    borderColor: "white",
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,

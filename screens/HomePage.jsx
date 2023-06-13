@@ -5,17 +5,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CarItem } from "../components/CarItem";
 import { useStore } from "../store";
 import LoadingScreen from "../components/LoadingScreen";
+import AddCarModal from "../components/AddCarModal";
 
 export default function HomePage() {
   const cars = useStore((state) => state.cars);
   const getAllCars = useStore((state) => state.getAllCars);
   const carsLoading = useStore((state) => state.carsLoading);
+  const isCarModalVisible = useStore((state) => state.isCarModalVisible);
+
 
   useEffect(() => {
     if (!cars.length) {
-      console.log("useeffcet home")
       getAllCars();
-      
     }
   }, []);
 
@@ -25,7 +26,6 @@ export default function HomePage() {
         <View style={{ marginVertical: 15 }}>
           <LoadingScreen width={"88%"} height={450} />
           <LoadingScreen width={"88%"} height={450} />
-          <LoadingScreen width={"88%"} height={450} />
         </View>
       </SafeAreaView>
     );
@@ -33,11 +33,13 @@ export default function HomePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginVertical: 15 }}>
+      {isCarModalVisible && <AddCarModal />}
+      <View style={{ marginVertical: 10 }}>
         <FlatList
-          data={cars.data}
+          data={cars}
           renderItem={({ item }) => <CarItem item={item} />}
           keyExtractor={(item) => item._id}
+          initialNumToRender={4}
         />
       </View>
     </SafeAreaView>
