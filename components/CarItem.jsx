@@ -1,11 +1,26 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import axios from "axios";
 
 export const Item = ({ item }) => {
+
+  
+  const deleteCar = async (id) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(
+        `http://10.0.2.2:5000/api/${id}/delete`
+      );
+      console.log(response.data.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.item}>
       <View style={styles.iconContainer}>
-        <Pressable>
+        <Pressable onPress={() => deleteCar(item._id)}>
           <FontAwesome name="trash-o" size={24} color="black" />
         </Pressable>
         <Pressable>
