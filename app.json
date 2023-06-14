@@ -27,7 +27,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme":["deneme","fb782322713529233"]
+    "scheme":["deneme","fb782322713529233"],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
   }
 }
 

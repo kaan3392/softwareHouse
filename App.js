@@ -12,11 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "./store";
 import { AddCar } from "./screens/AddCar";
 import { UpdateCar } from "./screens/UpdateCar";
+import CompareTwoCar from "./screens/CompareTwoCar";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function StackNavigator() {
+function StackNavigatorHome() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -55,11 +56,46 @@ function StackNavigator() {
             </Pressable>
           ),
         })}
-        name="HomePage"
+        name="Cars"
         component={HomePage}
       />
       <Stack.Screen name="Add Car" component={AddCar} />
       <Stack.Screen name="Update Car" component={UpdateCar} />
+    </Stack.Navigator>
+  );
+}
+
+function StackNavigatorComparasion() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: "white",
+        headerStyle: {
+          backgroundColor: "gray",
+        },
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "black",
+        tabBarStyle: {
+          backgroundColor: "gray",
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 16,
+          fontWeight: "bold",
+        },
+        tabBarIconStyle: {
+          size: 30,
+        },
+      }}
+    >
+      <Stack.Screen
+        options={({ navigation }) => ({
+          tabBarLabel: "Compare",
+        })}
+        name="Compare "
+        component={Comparasion}
+      />
+      <Stack.Screen name="Compare Two Car" component={CompareTwoCar} />
     </Stack.Navigator>
   );
 }
@@ -102,7 +138,7 @@ export default function App() {
       >
         <Tab.Screen
           name="Home"
-          component={StackNavigator}
+          component={StackNavigatorHome}
           options={{
             headerShown: false,
             tabBarLabel: "Home",
@@ -145,9 +181,10 @@ export default function App() {
         /> */}
         <Tab.Screen
           name="Compare"
-          component={Comparasion}
+          component={StackNavigatorComparasion}
           options={{
             tabBarLabel: "Compare",
+            headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="compare"

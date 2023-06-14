@@ -5,13 +5,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CarItem } from "../components/CarItem";
 import { useStore } from "../store";
 import LoadingScreen from "../components/LoadingScreen";
-import AddCarModal from "../components/AddCarModal";
 
 export default function HomePage() {
   const cars = useStore((state) => state.cars);
   const getAllCars = useStore((state) => state.getAllCars);
   const carsLoading = useStore((state) => state.carsLoading);
-  const isCarModalVisible = useStore((state) => state.isCarModalVisible);
 
 
   useEffect(() => {
@@ -31,9 +29,10 @@ export default function HomePage() {
     );
   }
 
+  
+
   return (
     <SafeAreaView style={styles.container}>
-      {isCarModalVisible && <AddCarModal />}
       <View style={{ marginVertical: 10 }}>
         <FlatList
           data={cars}

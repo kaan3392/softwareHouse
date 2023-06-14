@@ -2,7 +2,8 @@ import { create } from "zustand";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useStore = create((set) => ({
+const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
+export const useStore = create((set, get) => ({
   user: null,
   cars: [],
   carsLoading: false,
@@ -14,15 +15,16 @@ export const useStore = create((set) => ({
   carAddLoading: false,
   carAddError: null,
   isCarModalVisible: false,
-  // compareTwoCar:[],
+  compareTwoCar: [],
 
   getAllCars: async () => {
     set((prev) => ({ ...prev, carsLoading: true }));
     try {
+      await wait();
       const { data } = await axios.get(`http://10.0.2.2:5000/api/`);
       set((prev) => ({ ...prev, carsLoading: false, cars: data.data }));
     } catch (error) {
-      set((prev) => ({ ...prev, carsLoading: false, carsError: true }));
+      set((prev) => ({ ...prev, carsLoading: false, carsError: error }));
     }
   },
 
@@ -36,7 +38,7 @@ export const useStore = create((set) => ({
         cars: [...prev.cars, data.data],
       }));
     } catch (error) {
-      set((prev) => ({ ...prev, carAddLoading: false, carAddError: true }));
+      set((prev) => ({ ...prev, carAddLoading: false, carAddError: error }));
     }
   },
   deleteCar: async (carId) => {
@@ -52,7 +54,7 @@ export const useStore = create((set) => ({
       set((prev) => ({
         ...prev,
         carDeleteLoading: false,
-        carDeleteError: true,
+        carDeleteError: error,
       }));
     }
   },
@@ -72,7 +74,7 @@ export const useStore = create((set) => ({
       set((prev) => ({
         ...prev,
         carUpdateLoading: false,
-        carUpdateError: true,
+        carUpdateError: error,
       }));
     }
   },
@@ -114,5 +116,18 @@ export const useStore = create((set) => ({
       ...prev,
       isCarModalVisible: false,
     }));
+  },
+  setCompareTwoCar: (car) => {
+    if (get().compareTwoCar.length < 2) {
+      set((prev) => ({
+        ...prev,
+        compareTwoCar: [...prev.compareTwoCar, car],
+      }));
+    } else {
+      set((prev) => ({
+        ...prev,
+        compareTwoCar: prev.compareTwoCar.slice(1, 2).concat(car),
+      }));
+    }
   },
 }));

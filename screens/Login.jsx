@@ -6,6 +6,12 @@ import * as Facebook from "expo-auth-session/providers/facebook";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import { useStore } from "../store";
+import {
+  FACEBOOK_CLIENT_ID,
+  GOOGLE_WEB_CLIENT_ID,
+  GOOGLE_ANDROID_CLIENT_ID,
+  GOOGLE_IOS_CLIENT_ID,
+} from "@env";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -18,17 +24,14 @@ export default function Login() {
 
   const [requestFacebook, responseFacebook, promptAsyncFacebook] =
     Facebook.useAuthRequest({
-      clientId: "782322713529233",
+      clientId: FACEBOOK_CLIENT_ID,
     });
 
   const [requestGoogle, responseGoogle, promptAsyncGoogle] =
     Google.useIdTokenAuthRequest({
-      clientId:
-        "433638408319-j8jsusao7b1l7uni4ep6bc8ig79rnv7r.apps.googleusercontent.com",
-      iosClientId:
-        "433638408319-tkc8dujpk0qhukkfe9r3u1ggrg8steoo.apps.googleusercontent.com",
-      androidClientId:
-        "433638408319-rjvp9mbs9d2harooemakndipr0t8d2nr.apps.googleusercontent.com",
+      clientId: GOOGLE_WEB_CLIENT_ID,
+      iosClientId: GOOGLE_IOS_CLIENT_ID,
+      androidClientId: GOOGLE_ANDROID_CLIENT_ID,
     });
 
   useEffect(() => {
@@ -65,7 +68,6 @@ export default function Login() {
     const userInfo = await response.json();
     setUser(userInfo);
   }
-
 
   const onPressFacebook = async () => {
     try {
