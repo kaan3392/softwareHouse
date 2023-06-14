@@ -158,27 +158,6 @@ export default function App() {
             ),
           }}
         />
-        {/* <Tab.Screen
-          name="Home"
-          component={HomePage}
-          options={{
-            tabBarLabel: "Home",
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-            headerRight: () => (
-              <Pressable
-                style={styles.button}
-                onPress={() => {
-                  carModalVisible();
-                }}
-              >
-                <Text style={{ color: "white" }}>Add Car</Text>
-                <Ionicons name="car-sport" size={24} color="white" />
-              </Pressable>
-            ),
-          }}
-        /> */}
         <Tab.Screen
           name="Compare"
           component={StackNavigatorComparasion}

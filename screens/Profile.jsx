@@ -3,12 +3,8 @@ import React from "react";
 
 export default function Profile() {
 
-  const user = {
-    email:"kacak3392@gmail.com",
-    picture:"https://lh3.googleusercontent.com/a/AAcHTteZHsv7JAoJNZ0ANBCAA7No2914gsglgspvttM7UA=s96-c",
-    given_name:"Kaan",
-    family_name:"Alacali",
-  };
+  
+  const user = useStore((state) => state.user);
 
   return (
     <View style={styles.container}>
