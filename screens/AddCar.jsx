@@ -9,13 +9,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { Image } from "react-native";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase.config";
 import { useStore } from "../store";
+import { uploadImageAsync } from "../utils/uploadImageToFirebase";
 
 export function AddCar({ navigation }) {
   const [name, setName] = useState("");
@@ -25,29 +24,32 @@ export function AddCar({ navigation }) {
   const [maximumHorsepower, setMaximumHorsepower] = useState("");
   const [weight, setWeight] = useState("");
   const [fuelConsumptionAverage, setFuelConsumptionAverage] = useState("");
-  const [image, setImage] = useState(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
 
   const addCar = useStore((state) => state.addCar);
-
+  const carAddLoading = useStore((state) => state.carAddLoading);
 
   const handleSubmit = async () => {
-    const car = {
-      name: name,
-      brand: brand,
-      productionYears: productionYears,
-      cylinderVolume: cylinderVolume,
-      maximumHorsepower: maximumHorsepower,
-      weight: weight,
-      fuelConsumptionAverage: fuelConsumptionAverage,
-      imageUrl: image,
-    };
+    try {
+      const uploadURL = await uploadImageAsync(imageUri);
 
-    await addCar(car);
-
-    navigation.navigate("Cars");
+      const car = {
+        name,
+        brand,
+        productionYears,
+        cylinderVolume,
+        maximumHorsepower,
+        weight,
+        fuelConsumptionAverage,
+        imageUrl: uploadURL,
+      };
+      await addCar(car);
+      navigation.navigate("Cars");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   };
-
 
   const pickImage = async () => {
     setIsImageLoading(true);
@@ -61,100 +63,69 @@ export function AddCar({ navigation }) {
       });
       console.log(result);
       if (!result.canceled) {
-        const uploadURL = await uploadImageAsync(result.assets[0].uri);
-        setImage(uploadURL);
+        setImageUri(result.assets[0].uri);
       } else {
-        setImage(null);
+        setImageUri(null);
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", error.message);
     } finally {
       setIsImageLoading(false);
     }
   };
-
-  async function uploadImageAsync(uri) {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-
-    try {
-      const storageRef = ref(storage, `image_${Date.now()}`);
-      const result = await uploadBytes(storageRef, blob);
-
-      blob.close();
-
-      return await getDownloadURL(result.ref);
-    } catch (error) {
-      Alert.alert(`Error: ${error}`);
-    }
-  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView styles={styles.mainContainer}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
           <View style={styles.container}>
-            <Text style={styles.title}>Add Car</Text>
             <View style={styles.inputMainContainer}>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={(text) => setName(text)}
                   style={styles.textInput}
+                  onChangeText={(text) => setName(text)}
                   placeholder="Brand"
-                  name="brand"
                 />
                 <TextInput
-                  onChangeText={(text) => setBrand(text)}
                   style={styles.textInput}
+                  onChangeText={(text) => setBrand(text)}
                   placeholder="Name"
-                  name="name"
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholder="Production Year"
                   onChangeText={(text) => setProductionYears(text)}
-                  name="productionYears"
+                  maxLength={4}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholder="Cylinder Volume"
                   onChangeText={(text) => setCylinderVolume(text)}
-                  name="cylinderVolume"
+                  maxLength={4}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholder="Maximum Horsepower"
                   onChangeText={(text) => setMaximumHorsepower(text)}
-                  name="maximumHorsepower"
+                  maxLength={4}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholder="Weight"
                   onChangeText={(text) => setWeight(text)}
-                  name="weight"
+                  maxLength={4}
                 />
                 <TextInput
                   style={styles.textInput}
                   placeholder="Fuel Consumption Average"
                   onChangeText={(text) => setFuelConsumptionAverage(text)}
-                  name="fuelConsumptionAverage"
+                  maxLength={4}
                 />
               </View>
-              {!image ? (
+              {!imageUri ? (
                 <TouchableOpacity
                   onPress={pickImage}
-                  style={styles.imagePlaceholde}
+                  style={styles.imagePlaceholder}
                 >
                   {isImageLoading ? (
                     <View
@@ -168,18 +139,33 @@ export function AddCar({ navigation }) {
                 </TouchableOpacity>
               ) : (
                 <Image
-                  source={{ uri: image }}
-                  style={{ width: 200, height: 200, alignSelf: "center", resizeMode: "contain" }}
+                  source={{ uri: imageUri }}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    alignSelf: "center",
+                    resizeMode: "contain",
+                  }}
                 />
               )}
             </View>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text>Add Car</Text>
-              </TouchableOpacity>
+              {carAddLoading ? (
+                <TouchableOpacity
+                  disabled={carAddLoading}
+                  style={styles.button}
+                  onPress={handleSubmit}
+                >
+                  <ActivityIndicator size="large" animating color="white" />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text>Add Car</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setImage(null)}
+                onPress={() => setImageUri(null)}
               >
                 <Text>Remove Image</Text>
               </TouchableOpacity>
@@ -196,6 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "lightgray",
   },
+
   mainContainer: {
     flex: 1,
   },
@@ -203,11 +190,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "lightgray",
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
+
   inputMainContainer: {
     flex: 1,
-    padding: 20,
+    paddingVertical: 20,
     borderRadius: 5,
     gap: 20,
   },
@@ -225,6 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 10,
   },
 
   textInput: {
@@ -233,7 +223,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 8,
     marginBottom: 10,
-    width: "40%",
+    width: "45%",
+    fontSize: 13,
   },
 
   buttonContainer: {
@@ -242,6 +233,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+
   button: {
     alignItems: "center",
     backgroundColor: "gray",
@@ -252,9 +244,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 5,
   },
-  imagePlaceholde: {
-    width: 200,
-    height: 200,
+
+  imagePlaceholder: {
+    width: 150,
+    height: 150,
     backgroundColor: "#E1E1E1",
     justifyContent: "center",
     alignItems: "center",

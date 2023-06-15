@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
+const wait = () => new Promise((resolve) => setTimeout(resolve, 1200));
 export const useStore = create((set, get) => ({
   user: null,
   cars: [],

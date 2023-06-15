@@ -12,6 +12,7 @@ import {
   GOOGLE_ANDROID_CLIENT_ID,
   GOOGLE_IOS_CLIENT_ID,
 } from "@env";
+import GradientText from "../components/GradientText";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -94,7 +95,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.title}> Cars App</Text>
+      <GradientText text="<CarApp/>" />
       <LinearGradient
         style={styles.gradient}
         locations={[0.5, 0.9]}
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
   title: {
     color: "black",
     fontSize: 40,
-    fontWeight: "bold",
+    fontFamily:"Montserrat-SemiBold"
   
   },
   image: {

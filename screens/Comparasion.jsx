@@ -33,7 +33,10 @@ export default function Comparasion({ navigation }) {
 
   const ItemView = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => setCompareTwoCar(item)} style={styles.itemStyle}>
+      <TouchableOpacity
+        onPress={() => setCompareTwoCar(item)}
+        style={styles.itemStyle}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -42,7 +45,7 @@ export default function Comparasion({ navigation }) {
             marginRight: 20,
           }}
         >
-          <Text >
+          <Text>
             {item.brand} {item.name}{" "}
           </Text>
           {compareTwoCar.includes(item) && (
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderColor: "#009688",
     backgroundColor: "#FFFFFF",
-    borderRadius:10
+    borderRadius: 10,
   },
   image: {
     width: 150,
