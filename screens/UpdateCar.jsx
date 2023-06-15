@@ -11,15 +11,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Alert,
 } from "react-native";
 
 import { useStore } from "../store";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { uploadImageAsync } from "../utils/uploadImageToFirebase";
 
-export function UpdateCar({ route }) {
+export function UpdateCar({ route, navigation }) {
   const { car } = route.params;
-  const [image, setImage] = useState(car.imageUrl);
+  const [imageUri, setImageUri] = useState(car.imageUrl);
   const [name, setName] = useState(car.name);
   const [brand, setBrand] = useState(car.brand);
   const [productionYears, setProductionYears] = useState(car.productionYears);
@@ -34,21 +35,32 @@ export function UpdateCar({ route }) {
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   const updateCar = useStore((state) => state.updateCar);
+  const carUpdateLoading = useStore((state) => state.carUpdateLoading);
   const height = useHeaderHeight();
 
   const handleSubmit = async () => {
-    const updatedCar = {
-      name: name,
-      brand: brand,
-      productionYears: productionYears,
-      cylinderVolume: cylinderVolume,
-      maximumHorsepower: maximumHorsepower,
-      weight: weight,
-      fuelConsumptionAverage: fuelConsumptionAverage,
-      imageUrl: image,
-    };
-    await updateCar(updatedCar, car._id);
-    navigation.navigate("Cars");
+    try {
+      let uploadURL = car.imageUrl;
+
+      if (imageUri !== car.imageUrl && imageUri !== null) {
+        uploadURL = await uploadImageAsync(imageUri);
+      }
+
+      const updatedCar = {
+        name: name,
+        brand: brand,
+        productionYears: productionYears,
+        cylinderVolume: cylinderVolume,
+        maximumHorsepower: maximumHorsepower,
+        weight: weight,
+        fuelConsumptionAverage: fuelConsumptionAverage,
+        imageUrl: uploadURL,
+      };
+      await updateCar(updatedCar, car._id);
+      navigation.navigate("Cars");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   const pickImage = async () => {
@@ -63,10 +75,9 @@ export function UpdateCar({ route }) {
       });
       console.log(result);
       if (!result.canceled) {
-        const uploadURL = await uploadImageAsync(result.assets[0].uri);
-        setImage(uploadURL);
+        setImageUri(result.assets[0].uri);
       } else {
-        setImage(null);
+        setImageUri(null);
       }
     } catch (error) {
       console.log(error);
@@ -159,7 +170,7 @@ export function UpdateCar({ route }) {
                 />
               </View>
             </View>
-            {!image ? (
+            {!imageUri ? (
               <TouchableOpacity
                 onPress={pickImage}
                 style={styles.imagePlaceholde}
@@ -179,7 +190,7 @@ export function UpdateCar({ route }) {
               </TouchableOpacity>
             ) : (
               <Image
-                source={{ uri: image }}
+                source={{ uri: imageUri }}
                 style={{
                   width: 150,
                   height: 150,
@@ -190,12 +201,21 @@ export function UpdateCar({ route }) {
             )}
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text>Update Car</Text>
-              </TouchableOpacity>
+              {carUpdateLoading ? (
+                <TouchableOpacity
+                  disabled={carUpdateLoading}
+                  style={styles.button}
+                >
+                  <ActivityIndicator size="large" animating color="white" />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text>Update Car</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setImage(null)}
+                onPress={() => setImageUri(null)}
               >
                 <Text>Remove Image</Text>
               </TouchableOpacity>

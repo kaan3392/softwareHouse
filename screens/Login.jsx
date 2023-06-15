@@ -71,6 +71,7 @@ export default function Login() {
   const onPressFacebook = async () => {
     try {
       const result = await promptAsyncFacebook();
+      console.log(result)
       if (result.type !== "success") {
         Alert.alert("Login failed, please try again");
         return;

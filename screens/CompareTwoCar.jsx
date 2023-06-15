@@ -15,29 +15,29 @@ export default function CompareTwoCar() {
     >
       <View style={styles.container}>
         <Image
-          source={{ uri: compareTwoCar[1].imageUrl }}
+          source={{ uri: compareTwoCar[0].imageUrl }}
           style={styles.image}
         />
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].brand}</Text>
+          <Text>{compareTwoCar[0].brand}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].name}</Text>
+          <Text>{compareTwoCar[0].name}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].productionYears}</Text>
+          <Text>{compareTwoCar[0].productionYears}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].cylinderVolume}</Text>
+          <Text>{compareTwoCar[0].cylinderVolume}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].maximumHorsepower}</Text>
+          <Text>{compareTwoCar[0].maximumHorsepower}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].weight}</Text>
+          <Text>{compareTwoCar[0].weight}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[1].fuelConsumptionAverage}</Text>
+          <Text>{compareTwoCar[0].fuelConsumptionAverage}</Text>
         </View>
       </View>
 
@@ -76,29 +76,29 @@ export default function CompareTwoCar() {
 
       <View style={styles.container}>
         <Image
-          source={{ uri: compareTwoCar[0].imageUrl }}
+          source={{ uri: compareTwoCar[1].imageUrl }}
           style={styles.image}
         />
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].brand}</Text>
+          <Text>{compareTwoCar[1].brand}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].name}</Text>
+          <Text>{compareTwoCar[1].name}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].productionYears}</Text>
+          <Text>{compareTwoCar[1].productionYears}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].cylinderVolume}</Text>
+          <Text>{compareTwoCar[1].cylinderVolume}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].maximumHorsepower}</Text>
+          <Text>{compareTwoCar[1].maximumHorsepower}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].weight}</Text>
+          <Text>{compareTwoCar[1].weight}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text>{compareTwoCar[0].fuelConsumptionAverage}</Text>
+          <Text>{compareTwoCar[1].fuelConsumptionAverage}</Text>
         </View>
       </View>
     </View>

@@ -154,7 +154,7 @@ export function AddCar({ navigation }) {
                 <TouchableOpacity
                   disabled={carAddLoading}
                   style={styles.button}
-                  onPress={handleSubmit}
+                  
                 >
                   <ActivityIndicator size="large" animating color="white" />
                 </TouchableOpacity>

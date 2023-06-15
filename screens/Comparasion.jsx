@@ -78,7 +78,6 @@ export default function Comparasion({ navigation }) {
       <View style={styles.container}>
         <View style={styles.compareContainer}>
           <View style={styles.compareItem}>
-            <Text>First Car</Text>
             {compareTwoCar && compareTwoCar.length > 0 ? (
               <TouchableOpacity
                 onPress={() => setCompareTwoCar(compareTwoCar[0])}
@@ -94,7 +93,6 @@ export default function Comparasion({ navigation }) {
             <Text style={{ fontSize: 18 }}>{compareTwoCar[0]?.name}</Text>
           </View>
           <View style={styles.compareItem}>
-            <Text>Second Car</Text>
             {compareTwoCar && compareTwoCar.length > 1 ? (
               <TouchableOpacity
                 onPress={() => setCompareTwoCar(compareTwoCar[1])}
