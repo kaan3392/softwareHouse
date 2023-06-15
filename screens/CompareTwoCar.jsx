@@ -104,63 +104,7 @@ export default function CompareTwoCar() {
     </View>
   );
 }
-// export default function CompareTwoCar() {
-//   const compareTwoCar = useStore((state) => state.compareTwoCar);
-//   return (
-//     <View style={{ flex: 1, flexDirection: "row"}}>
-//         <View style={styles.titles}>
-//           <View style={styles.placeholder} />
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Brand</Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Name</Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Production Years</Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Cylinder Volume <Text style={styles.small}>(cm3)</Text></Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Maximum Horsepower <Text style={styles.small}>(PS)</Text></Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Weight <Text style={styles.small}>(Kg)</Text></Text>
-//           </View>
-//           <View style={styles.infoItem}>
-//             <Text style={styles.text}>Fuel Consumption Average <Text style={styles.small}>(L/100Km)</Text></Text>
-//           </View>
-//         </View>
-//         {compareTwoCar.map((item, index) => (
-//           <View style={styles.container} key={index}>
-//             <Image source={{ uri: item.imageUrl }} style={styles.image} />
-//             <View style={styles.infoItem}>
-//               <Text>{item.brand}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.name}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.productionYears}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.cylinderVolume}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.maximumHorsepower}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.weight}</Text>
-//             </View>
-//             <View style={styles.infoItem}>
-//               <Text>{item.fuelConsumptionAverage}</Text>
-//             </View>
-//           </View>
-//         ))}
-//     </View>
-//   );
-// }
+
 
 const styles = StyleSheet.create({
   container: {
