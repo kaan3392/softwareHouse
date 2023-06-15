@@ -14,7 +14,6 @@ export const useStore = create((set, get) => ({
   carDeleteError: null,
   carAddLoading: false,
   carAddError: null,
-  isCarModalVisible: false,
   compareTwoCar: [],
 
   getAllCars: async () => {
@@ -99,34 +98,28 @@ export const useStore = create((set, get) => ({
   logout: async () => {
     try {
       await AsyncStorage.removeItem("user");
-      set((prev) => ({ ...prev, user: null }));
+      set((prev) => ({ ...prev, cars: [], compareTwoCar: [], user: null }));
     } catch (error) {
       console.log(error);
     }
-  },
-  carModalVisible: () => {
-    console.log("add carrr");
-    set((prev) => ({
-      ...prev,
-      isCarModalVisible: true,
-    }));
-  },
-  notCarModalVisible: () => {
-    set((prev) => ({
-      ...prev,
-      isCarModalVisible: false,
-    }));
   },
   setCompareTwoCar: (car) => {
     if (get().compareTwoCar.length < 2) {
       set((prev) => ({
         ...prev,
-        compareTwoCar: [...prev.compareTwoCar, car],
+        compareTwoCar:
+          prev.compareTwoCar.map((item) => item._id).indexOf(car._id) > -1
+            ? prev.compareTwoCar.filter((item) => item._id !== car._id)
+            : [...prev.compareTwoCar, car],
       }));
-    } else {
+      return;
+    }
+    if (get().compareTwoCar.some((item) => item._id === car._id)) {
       set((prev) => ({
         ...prev,
-        compareTwoCar: prev.compareTwoCar.slice(1, 2).concat(car),
+        compareTwoCar: prev.compareTwoCar.filter(
+          (item) => item._id !== car._id
+        ),
       }));
     }
   },

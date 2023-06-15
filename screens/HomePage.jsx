@@ -33,7 +33,7 @@ export default function HomePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginVertical: 10 }}>
+      <View style={{ marginVertical: 15 }}>
         <FlatList
           data={cars}
           renderItem={({ item }) => <CarItem item={item} />}

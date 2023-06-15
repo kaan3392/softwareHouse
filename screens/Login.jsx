@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import * as Facebook from "expo-auth-session/providers/facebook";
@@ -17,10 +17,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const setUser = useStore((state) => state.setUser);
-  const user = useStore((state) => state.user);
 
   const [accessToken, setAccessToken] = useState(null);
-  // const [user, setUser] = useState(null);
 
   const [requestFacebook, responseFacebook, promptAsyncFacebook] =
     Facebook.useAuthRequest({
@@ -73,7 +71,7 @@ export default function Login() {
     try {
       const result = await promptAsyncFacebook();
       if (result.type !== "success") {
-        alert("Login failed, please try again");
+        Alert.alert("Login failed, please try again");
         return;
       }
     } catch (e) {
@@ -85,7 +83,7 @@ export default function Login() {
     try {
       const result = await promptAsyncGoogle();
       if (result.type !== "success") {
-        alert("Login failed, please try again");
+        Alert.alert("Login failed, please try again");
         return;
       }
     } catch (e) {
@@ -104,7 +102,7 @@ export default function Login() {
       >
         <Image
           style={styles.image}
-          source={require("../assets/mustang-no-bg.png")}
+          source={require("../assets/loginPic.png")}
         />
       </LinearGradient>
       <Pressable
@@ -112,7 +110,7 @@ export default function Login() {
         style={styles.button}
         onPress={onPressGoogle}
       >
-        <Text style={styles.text}>Login With Google</Text>
+        <Text style={styles.text}>Login with Google</Text>
         <Image style={styles.icon} source={require("../assets/google.png")} />
       </Pressable>
       <Pressable
@@ -120,7 +118,7 @@ export default function Login() {
         style={styles.button}
         onPress={onPressFacebook}
       >
-        <Text style={styles.text}>Login With Facebook</Text>
+        <Text style={styles.text}>Login with Facebook</Text>
         <Image style={styles.icon} source={require("../assets/facebook.png")} />
       </Pressable>
     </View>
@@ -136,9 +134,10 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   title: {
-    color: "white",
+    color: "black",
     fontSize: 40,
     fontWeight: "bold",
+  
   },
   image: {
     width: 300,

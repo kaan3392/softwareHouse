@@ -95,7 +95,7 @@ function StackNavigatorComparasion() {
         name="Compare "
         component={Comparasion}
       />
-      <Stack.Screen name="Compare Two Car" component={CompareTwoCar} />
+      <Stack.Screen name="Compare Cars" component={CompareTwoCar} />
     </Stack.Navigator>
   );
 }
@@ -104,7 +104,6 @@ export default function App() {
   const getUser = useStore((state) => state.getUser);
   const user = useStore((state) => state.user);
   const logout = useStore((state) => state.logout);
-  const carModalVisible = useStore((state) => state.carModalVisible);
 
   useEffect(() => {
     getUser();
@@ -144,17 +143,6 @@ export default function App() {
             tabBarLabel: "Home",
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-            headerRight: () => (
-              <Pressable
-                style={styles.button}
-                onPress={() => {
-                  carModalVisible();
-                }}
-              >
-                <Text style={{ color: "white" }}>Add Car</Text>
-                <Ionicons name="car-sport" size={24} color="white" />
-              </Pressable>
             ),
           }}
         />

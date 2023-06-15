@@ -9,6 +9,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
   ActivityIndicator,
 } from "react-native";
 import { Image } from "react-native";
@@ -95,7 +96,7 @@ export function AddCar({ navigation }) {
 
       return await getDownloadURL(result.ref);
     } catch (error) {
-      alert(`Error: ${error}`);
+      Alert.alert(`Error: ${error}`);
     }
   }
 
@@ -168,7 +169,7 @@ export function AddCar({ navigation }) {
               ) : (
                 <Image
                   source={{ uri: image }}
-                  style={{ width: 200, height: 200, alignSelf: "center" }}
+                  style={{ width: 200, height: 200, alignSelf: "center", resizeMode: "contain" }}
                 />
               )}
             </View>

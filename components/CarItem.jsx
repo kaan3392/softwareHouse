@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Alert,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View, Alert } from "react-native";
 import { useStore } from "../store";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -20,7 +12,7 @@ export const CarItem = ({ item }) => {
   const showConfirmDialog = () => {
     return Alert.alert(
       "Are your sure?",
-      "Are you sure you want to remove this beautiful box?",
+      "Are you sure you want to remove this car?",
       [
         {
           text: "Yes",
@@ -52,19 +44,36 @@ export const CarItem = ({ item }) => {
         </Pressable>
       </View>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      <View style={{ flexDirection: "row", gap: 10 }}>
-        <Text style={styles.name}>{item.brand}</Text>
-        <Text style={styles.name}>{item.name}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          marginBottom: 20,
+          marginTop: -10,
+        }}
+      >
+        <Text style={[styles.name, { fontWeight: "bold", fontSize: 20 }]}>
+          {item.brand}
+        </Text>
+        <Text style={[styles.name, { fontWeight: "bold", fontSize: 20 }]}>
+          {item.name}
+        </Text>
       </View>
+
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Production Year</Text>
         <Text style={styles.name}>{item.productionYears}</Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Clinder Volume</Text>
-        <Text style={styles.name}>
-          {item.cylinderVolume} <Text style={styles.small}>cm3</Text>
-        </Text>
+
+        {item.cylinderVolume === "none" ? (
+          <Text style={styles.name}>-</Text>
+        ) : (
+          <Text style={styles.name}>
+            {item.cylinderVolume} <Text style={styles.small}>cm3</Text>
+          </Text>
+        )}
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>Maximum Horsepower</Text>
@@ -96,7 +105,6 @@ export const CarItem = ({ item }) => {
 const styles = StyleSheet.create({
   item: {
     padding: 5,
-    // margintop: 50,
     marginHorizontal: 20,
     alignItems: "center",
     elevation: 5,
@@ -129,11 +137,13 @@ const styles = StyleSheet.create({
 
   iconContainer: {
     position: "absolute",
-    top: 25,
-    right: 25,
+    top: 20,
+    right: 15,
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 15,
     width: 60,
+    zIndex: 2,
+    justifyContent: "flex-end",
   },
   small: {
     fontSize: 12,

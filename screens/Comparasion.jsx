@@ -7,6 +7,7 @@ import { TextInput } from "react-native";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Comparasion({ navigation }) {
   const [search, setSearch] = useState("");
@@ -14,7 +15,6 @@ export default function Comparasion({ navigation }) {
   const cars = useStore((state) => state.cars);
   const setCompareTwoCar = useStore((state) => state.setCompareTwoCar);
   const compareTwoCar = useStore((state) => state.compareTwoCar);
-
 
   const searchFilter = (text) => {
     if (text) {
@@ -33,10 +33,22 @@ export default function Comparasion({ navigation }) {
 
   const ItemView = ({ item }) => {
     return (
-      <TouchableOpacity >
-        <Text onPress={() => setCompareTwoCar(item)} style={styles.itemStyle}>
-          {item.brand} {item.name}{" "}
-        </Text>
+      <TouchableOpacity onPress={() => setCompareTwoCar(item)} style={styles.itemStyle}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginRight: 20,
+          }}
+        >
+          <Text >
+            {item.brand} {item.name}{" "}
+          </Text>
+          {compareTwoCar.includes(item) && (
+            <MaterialIcons name="done" size={18} color="black" />
+          )}
+        </View>
       </TouchableOpacity>
     );
   };
@@ -53,6 +65,11 @@ export default function Comparasion({ navigation }) {
     );
   };
 
+  const getCompareTwoCar = () => {
+    setSearch("");
+    navigation.navigate("Compare Cars");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -60,10 +77,14 @@ export default function Comparasion({ navigation }) {
           <View style={styles.compareItem}>
             <Text>First Car</Text>
             {compareTwoCar && compareTwoCar.length > 0 ? (
-              <Image
-                source={{ uri: compareTwoCar[0]?.imageUrl }}
-                style={styles.image}
-              />
+              <TouchableOpacity
+                onPress={() => setCompareTwoCar(compareTwoCar[0])}
+              >
+                <Image
+                  source={{ uri: compareTwoCar[0]?.imageUrl }}
+                  style={styles.image}
+                />
+              </TouchableOpacity>
             ) : (
               <View style={styles.placeholder} />
             )}
@@ -72,10 +93,14 @@ export default function Comparasion({ navigation }) {
           <View style={styles.compareItem}>
             <Text>Second Car</Text>
             {compareTwoCar && compareTwoCar.length > 1 ? (
-              <Image
-                source={{ uri: compareTwoCar[1]?.imageUrl }}
-                style={styles.image}
-              />
+              <TouchableOpacity
+                onPress={() => setCompareTwoCar(compareTwoCar[1])}
+              >
+                <Image
+                  source={{ uri: compareTwoCar[1]?.imageUrl }}
+                  style={styles.image}
+                />
+              </TouchableOpacity>
             ) : (
               <View style={styles.placeholder} />
             )}
@@ -88,7 +113,7 @@ export default function Comparasion({ navigation }) {
             compareTwoCar.length < 2 && styles.disabledButton,
           ]}
           disabled={compareTwoCar.length < 2}
-          onPress={() => navigation.navigate("Compare Two Car")}
+          onPress={getCompareTwoCar}
         >
           <Text style={styles.buttonText}>Compare</Text>
         </TouchableOpacity>
@@ -138,6 +163,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderColor: "#009688",
     backgroundColor: "#FFFFFF",
+    borderRadius:10
   },
   image: {
     width: 150,
@@ -150,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
   },
   button: {
-    backgroundColor: "blue",
+    backgroundColor: "#222865",
     padding: 10,
     margin: 10,
     borderRadius: 10,
