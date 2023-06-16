@@ -62,11 +62,17 @@ export default function Login() {
   }, [responseGoogle, accessToken]);
 
   async function fetchUserInfo() {
-    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const userInfo = await response.json();
-    setUser(userInfo);
+    try{
+
+      let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const userInfo = await response.json();
+      setUser(userInfo);
+    }
+    catch(e){
+      Alert.alert("Login failed, please try again");
+    }
   }
 
   const onPressFacebook = async () => {
