@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Image, Pressable, StyleSheet, Text, View, Alert } from "react-native";
 import { useStore } from "../store";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
 
 export const CarItem = ({ item }) => {
   const deleteCar = useStore((state) => state.deleteCar);
@@ -28,7 +29,9 @@ export const CarItem = ({ item }) => {
   };
 
   return (
-    <View style={styles.item}>
+    <View
+      style={styles.item}
+    >
       <View style={styles.iconContainer}>
         <Pressable onPress={() => showConfirmDialog()}>
           <FontAwesome name="trash-o" size={24} color="black" />
