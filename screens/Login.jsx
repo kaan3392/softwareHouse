@@ -26,6 +26,13 @@ export default function Login() {
       clientId: FACEBOOK_CLIENT_ID,
     });
 
+    if (requestFacebook) {
+      console.log(
+        "You need to add this url to your authorized redirect urls on your Facebook app: ",
+         requestFacebook.redirectUri,
+      );
+    }
+
   const [requestGoogle, responseGoogle, promptAsyncGoogle] =
     Google.useIdTokenAuthRequest({
       clientId: GOOGLE_WEB_CLIENT_ID,
